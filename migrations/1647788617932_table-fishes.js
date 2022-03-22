@@ -3,7 +3,7 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.sql(`CREATE TABLE fishes (
+  pgm.sql(`CREATE TABLE creature (
         id SERIAL PRIMARY KEY,
         address VARCHAR,
         points INTEGER,
