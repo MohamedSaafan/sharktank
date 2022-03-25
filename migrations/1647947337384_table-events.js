@@ -9,7 +9,9 @@ exports.up = (pgm) => {
        team_a INTEGER,
        team_b INTEGER,
        schedule_date TIMESTAMP,
-       is_scheduled BOOLEAN
+       is_scheduled BOOLEAN,
+      duration INTERVAL,
+      is_fished BOOLEAN 
    );
     `);
 };
