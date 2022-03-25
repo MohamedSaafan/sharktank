@@ -5,9 +5,11 @@ exports.shorthands = undefined;
 exports.up = (pgm) => {
   pgm.sql(`
    CREATE TABLE  events(
+       id SERIAL PRIMARY ID,
        team_a VARCHAR,
        team_b VARCHAR,
-       start_date TIMESTAMP,
+       schedule_date TIMESTAMP,
+       is_scheduled BOOLEAN
    )
     `);
 };

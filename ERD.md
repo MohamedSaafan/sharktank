@@ -3,13 +3,13 @@
 ### events
 
 ```
-|name|Data type|
-|----|---------|
-| id | integer |
-|team a | varchar|
-|team b | varchar |
-|schedule date | timestamp |
-|is_scheduled | boolean |
+| name          | Data type |
+| ----          | --------  |
+| id            | integer   |
+| team a        | varchar   |
+| team b        | varchar   |
+| schedule date | timestamp |
+| is_scheduled  | boolean   |
 
 
  [comment]: <> (emaing the  points let's see if they can derived from the other relationships or not! )
@@ -28,7 +28,7 @@
 | points        | integer   |
 | team_id       | integer   |
 | time_picked   | timestamp |
-| is_picked    | boolean   |
+| is_picked     | boolean   |
 | is_dead       | boolean   |
 | collection_id | integer   |
 
@@ -42,15 +42,5 @@
 | ---- | --------- |
 | id   | serial    |
 | name | varchar   |
-
-```
-
-### Results
-
-```
-
-|    name    | Data type |
-| ---------- | --------- |
-| collection | varchar   |
 
 ```
