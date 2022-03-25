@@ -5,6 +5,7 @@
 ```
 |name|Data type|
 |----|---------|
+| id | integer |
 |team a | varchar|
 |team b | varchar |
 |schedule date | timestamp |
@@ -16,3 +17,40 @@
 ```
 
 ### creatures
+
+```
+
+| name          | Data type |
+| ------------- | --------- |
+| id            | serial    |
+| event_id      | integer   |
+| address       | varchar   |
+| points        | integer   |
+| team_id       | integer   |
+| time_picked   | timestamp |
+| is_piecked    | boolean   |
+| is_dead       | boolean   |
+| collection_id | integer   |
+
+```
+
+### collections
+
+```
+
+| name | Data type |
+| ---- | --------- |
+| id   | serial    |
+| name | varchar   |
+
+```
+
+### Results
+
+```
+
+|    name    | Data type |
+| ---------- | --------- |
+| collection | varchar   |
+
+```

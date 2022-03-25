@@ -5,12 +5,14 @@ exports.shorthands = undefined;
 exports.up = (pgm) => {
   pgm.sql(`CREATE TABLE creature (
         id SERIAL PRIMARY KEY,
+        event_id integer,
         address VARCHAR,
         points INTEGER,
         team_id INTEGER,
         is_picked BOOLEAN, 
         time_picked TIMESTAMP, 
-        is_eaten BOOLEAN
+        is_dead BOOLEAN,
+        collection_id integer
         );`);
 };
 exports.down = (pgm) => {
