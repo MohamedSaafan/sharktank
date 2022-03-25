@@ -10,7 +10,7 @@ exports.up = (pgm) => {
        team_b VARCHAR,
        schedule_date TIMESTAMP,
        is_scheduled BOOLEAN
-   )
+   );
     `);
 };
 
