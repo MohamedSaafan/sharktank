@@ -28,7 +28,7 @@
 | points        | integer   |
 | team_id       | integer   |
 | time_picked   | timestamp |
-| is_piecked    | boolean   |
+| is_picked    | boolean   |
 | is_dead       | boolean   |
 | collection_id | integer   |
 
