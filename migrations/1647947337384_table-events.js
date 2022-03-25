@@ -5,7 +5,7 @@ exports.shorthands = undefined;
 exports.up = (pgm) => {
   pgm.sql(`
    CREATE TABLE  events(
-       id SERIAL PRIMARY ID,
+       id SERIAL PRIMARY KEY,
        team_a VARCHAR,
        team_b VARCHAR,
        schedule_date TIMESTAMP,
