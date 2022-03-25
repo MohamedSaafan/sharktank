@@ -6,8 +6,8 @@ exports.up = (pgm) => {
   pgm.sql(`
    CREATE TABLE  events(
        id SERIAL PRIMARY KEY,
-       team_a VARCHAR,
-       team_b VARCHAR,
+       team_a INTEGER,
+       team_b INTEGER,
        schedule_date TIMESTAMP,
        is_scheduled BOOLEAN
    );
