@@ -4,10 +4,22 @@ const router = new Router();
 
 router.get("/api/v1/events/", async (req, res, next) => {
   const teamsQuery = await pool.query(
-    `SELECT events.id as "eventId" , events.is_scheduled as "isScheduled",  events.schedule_date as "scheduleDate" ,teams.name as "teamName", teams.name, teams.id as "teamId", sum(creatures.points) as "points"
-     FROM events 
-     JOIN teams ON team_a = teams.id OR team_b = teams.id JOIN creatures ON creatures.event_id = events.id AND creatures.team_id = teams.id
-     GROUP BY events.id , teams.id; 
+    `SELECT events.id as "eventId" ,
+      events.is_scheduled as "isScheduled",
+      events.schedule_date as "scheduleDate" ,
+      teams.name as "teamName",
+      teams.name, teams.id as "teamId",
+      sum(creatures.points) as "points",
+          CASE  
+            WHEN events.is_scheduled = false THEN 'scheduled'
+            WHEN events.is_scheduled = true THEN 'scheduled'
+            WHEN events.is_scheduled is null THEN 'notScheduled' 
+            ELSE  'finished'
+            END as "state"
+      FROM events 
+      JOIN teams ON team_a = teams.id OR team_b = teams.id 
+      JOIN creatures ON creatures.event_id = events.id AND creatures.team_id = teams.id
+      GROUP BY events.id , teams.id; 
      `
   );
   console.log(

@@ -59,7 +59,7 @@ api/v1/events
 
 {
   id:id,
-  state:"live","sech","finshed",
+  state:"live","scheduled","notScheduled","finshed",
   team_a:{
    id:id,
    name:"",
