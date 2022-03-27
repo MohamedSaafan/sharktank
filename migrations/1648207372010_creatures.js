@@ -9,11 +9,9 @@ exports.up = (pgm) => {
           address VARCHAR,
           points INTEGER,
           team_id INTEGER,
-          times_picked timestamp,
-          is_picked BOOLEAN, 
+          is_picked BOOLEAN DEFAULT FALSE , 
           time_picked TIMESTAMP, 
-          is_dead BOOLEAN,
-          collection_id integer
+          is_dead BOOLEAN DEFAULT FALSE,
           );`);
 };
 exports.down = (pgm) => {

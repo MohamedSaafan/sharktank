@@ -4,7 +4,7 @@ exports.shorthands = undefined;
 
 exports.up = (pgm) => {
   pgm.sql(`
-        CREATE TABLE collections(
+        CREATE TABLE teams(
             id SERIAL PRIMARY KEY,
             name VARCHAR
 

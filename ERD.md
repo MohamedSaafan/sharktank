@@ -50,3 +50,64 @@
 ```
 
 ```
+
+### API End Points
+
+```
+
+api/v1/events
+
+{
+  id:id,
+  state:"live","sech","finshed",
+  team_a:{
+   id:id,
+   name:"",
+   points:150,
+  },
+  team_b:{
+   id:id,
+   name:"",
+   points:150,
+  },
+  date:153216565125,
+}
+
+api/v1/events/:id
+
+{
+  id:id,
+  team_a:{
+   id:id,
+   name:"",
+   points:150,
+  },
+  team_b:{
+   id:id,
+   name:"",
+   points:150,
+  },
+}
+
+api/v1/teams/:id/:eventID
+
+{
+  id:id,
+  name:"",
+  points:150,
+  eaten_fish:[id,id,id,id]
+}
+
+api/v1/events/:id/:teamId/creatures
+
+{
+ fishes:[
+  {
+   id:id,
+   ETH_address:ETHAddress,
+   is_picked:true,
+  }
+ ]
+}
+
+```
