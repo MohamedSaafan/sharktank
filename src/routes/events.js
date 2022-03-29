@@ -66,12 +66,12 @@ const getEvents = async () => {
   return mappedEvents;
 };
 
-router.get("/api/v1/events/", async (req, res, next) => {
+router.get("/events/", async (req, res, next) => {
   const events = await getEvents();
   res.send(events);
 });
 
-router.get("/api/v1/events/:id", async (req, res, next) => {
+router.get("/events/:id", async (req, res, next) => {
   const events = await getEvents();
   const filteredEvents = events.filter((event) => {
     return event.id === +req.params.id;

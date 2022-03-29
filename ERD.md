@@ -42,6 +42,8 @@ api/v1/events
 
 {
 id:id,
+schedule_date:153216565125,
+end_date:15353
 state:"live","scheduled","notScheduled","finshed",
 team_a:{
 id:id,
@@ -53,7 +55,7 @@ id:id,
 name:"",
 points:150,
 },
-date:153216565125,
+
 }
 
 api/v1/events/:id
