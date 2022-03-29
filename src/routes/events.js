@@ -1,4 +1,5 @@
 const Router = require("express").Router;
+const { append } = require("express/lib/response");
 const pool = require("../config/db");
 const router = new Router();
 
@@ -79,5 +80,13 @@ router.get("/events/:id", async (req, res, next) => {
   console.log(filteredEvents, "from events");
   res.send(filteredEvents[0]);
 });
-
+router.get("/events/:id/:teamId/creatures", async (req, res, next) => {
+  const eventID = req.params.id;
+  const teamID = req.params.teamId;
+  const creaturesQuery = await pool.query(
+    `select address, points, is_picked , is_dead,id from creatures where team_id = $1 and event_id = $2;`,
+    [teamID, eventID]
+  );
+  res.send({ creatures: creaturesQuery.rows });
+});
 module.exports = router;

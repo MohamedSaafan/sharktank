@@ -86,11 +86,13 @@ eaten_fish:[id,id,id,id]
 api/v1/events/:id/:teamId/creatures
 
 {
-fishes:[
+creatures:[
 {
 id:id,
 ETH_address:ETHAddress,
 is_picked:true,
+is_dead: false,
+points:50
 }
 ]
 }
