@@ -72,6 +72,8 @@ id:id,
 name:"",
 points:150,
 },
+schedule_date:4579308,
+end_date:0973458
 }
 
 api/v1/teams/:id/:eventID
