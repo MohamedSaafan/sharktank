@@ -1,5 +1,4 @@
 const Router = require("express").Router;
-const { append } = require("express/lib/response");
 const pool = require("../config/db");
 const router = new Router();
 
