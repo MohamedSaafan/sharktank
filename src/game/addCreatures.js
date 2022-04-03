@@ -8,8 +8,9 @@ const addCreatures = async (
   timePicked,
   isDead
 ) => {
-  const addQuery = await pool.query(
-    `
+  try {
+    const addQuery = await pool.query(
+      `
    INSERT INTO CREATURES (
     event_id,
     address,
@@ -29,6 +30,10 @@ const addCreatures = async (
     
    );
    `,
-    [eventId, address, teamID, isPicked, timePicked, isDead]
-  );
+      [eventId, address, teamID, isPicked, timePicked, isDead]
+    );
+  } catch (err) {
+    console.log("error happened while creating creatures", err);
+  }
 };
+module.exports = addCreatures;

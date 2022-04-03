@@ -29,3 +29,5 @@ const createEvent = async (
     console.log("some Error Happened", err);
   }
 };
+
+module.exports = createEvent;
