@@ -1,4 +1,7 @@
+const { send } = require("express/lib/response");
 const pool = require("../config/db");
+const { sseReqArray } = require("../routes/sse.js");
+const { sendMessage } = require("../SSE/index");
 
 const getTwoTeams = async (event_id) => {
   const getTeamsQuery = await pool.query(
@@ -60,13 +63,24 @@ const rewardCreatures = async (eventID) => {
     eventID
   );
 };
-
+const sendMessageForClients = (message) => {
+  sseReqArray.forEach((req) => {
+    send(req, message);
+  });
+};
 const startGame = (eventID) => {
   const { teamAID, teamBID } = getTwoTeams(eventID);
   /// run eat creatures function every 1 hour
   const killCreatureIntervalKey = setInterval(async () => {
-    await killCreatures(eventID, teamAID);
-    await killCreatures(eventID, teamBID);
+    const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);
+    const teamBKilledCreaturesIDs = await killCreatures(eventID, teamBID);
+    const killMessage = JSON.stringify({
+      [teamAID]: teamAkilledCreaturesIDs,
+      [teamBID]: teamBKilledCreaturesIDs,
+      event_id: eventID,
+    });
+    sendMessageForClients(killMessage);
+
     await rewardCreatures(eventID);
   }, 60000);
   //3 600 000 milli seconds equals one hour
