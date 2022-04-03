@@ -1,7 +1,7 @@
 const { send } = require("express/lib/response");
 const pool = require("../config/db");
 const { sseReqArray } = require("../routes/sse.js");
-const { sendMessage } = require("../SSE/index");
+const { sendMessageForClients } = require("../SSE/index");
 
 const getTwoTeams = async (event_id) => {
   const getTeamsQuery = await pool.query(
@@ -63,11 +63,7 @@ const rewardCreatures = async (eventID) => {
     eventID
   );
 };
-const sendMessageForClients = (message) => {
-  sseReqArray.forEach((req) => {
-    send(req, message);
-  });
-};
+
 const startGame = (eventID) => {
   const { teamAID, teamBID } = getTwoTeams(eventID);
   /// run eat creatures function every 1 hour
