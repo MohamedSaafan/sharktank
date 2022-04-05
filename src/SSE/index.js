@@ -1,11 +1,12 @@
 const { sseReqArray } = require("../routes/sse");
 
-const sendMessage = (req, message) => {
-  req.write(`data: ${message}\n\n`);
+const sendMessage = (res, message) => {
+  res.write(`data: ${message}\n\n`);
 };
 const sendMessageForClients = (message) => {
-  sseReqArray.forEach((req) => {
-    send(req, message);
+  sseReqArray.forEach((res) => {
+    sendMessage(res, message);
+    console.log("\n\n message sent successfylly \n\n");
   });
 };
 
