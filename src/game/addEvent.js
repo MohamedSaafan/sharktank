@@ -23,11 +23,13 @@ const createEvent = async (
         
             )
             
-            `[(teamA, teamB, scheduleDate, isScheduled, duration.finished)]
+            `,
+      [teamA, teamB, scheduleDate, isScheduled, duration, finished]
     );
   } catch (err) {
     console.log("some Error Happened", err);
   }
 };
+createEvent(1, 3, "now()", true, "5 00:00:00", false);
 
 module.exports = createEvent;

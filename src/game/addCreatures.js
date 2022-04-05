@@ -36,4 +36,18 @@ const addCreatures = async (
     console.log("error happened while creating creatures", err);
   }
 };
+const createMultipleCreatures = async (teamID) => {
+  for (let i = 0; i < 10000; i++) {
+    await addCreatures(
+      2,
+      "#0029483752fewrq495783fqjwjf--" + i,
+      3,
+      false,
+      null,
+      false
+    );
+  }
+  console.log("finished creating creatures");
+};
+createMultipleCreatures();
 module.exports = addCreatures;

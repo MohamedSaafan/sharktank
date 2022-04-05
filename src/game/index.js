@@ -26,7 +26,7 @@ const pickRandomCreature = (liveCreaturesIDs) => {
   // pick random 10 creatures and kill them
   while (true) {
     if (selectedCreaturesIndeces.length >= 10) break;
-    const randomIndex = Math.floor(Math.random() * liveCreaturesIDs);
+    const randomIndex = Math.floor(Math.random() * liveCreaturesIDs.length);
     const isExistInRandomIndex =
       selectedCreaturesIndeces.indexOf(randomIndex) !== -1 ? true : false;
     if (isExistInRandomIndex) continue;
@@ -34,9 +34,8 @@ const pickRandomCreature = (liveCreaturesIDs) => {
   }
   return selectedCreaturesIndeces;
 };
-
 const killCreatures = async (eventID, teamID) => {
-  const liveCreaturesIDs = getUnKilledCreatures(teamID, eventID);
+  const liveCreaturesIDs = await getUnKilledCreatures(teamID, eventID);
   if (liveCreaturesIDs.length < 10) {
     // kill all of them
     const killCreaturesQuery = await pool.query(
@@ -53,20 +52,22 @@ const killCreatures = async (eventID, teamID) => {
   // kill the creatures
   const desiredCreaturesIDsString = selectedCreaturesIDs.toString();
   const killCreaturesQuery = await pool.query(
-    `UPDATE CREATURES SET is_dead = true WHERE id IN ${desiredCreaturesIDsString}`
+    `UPDATE CREATURES SET is_dead = true WHERE id IN (${desiredCreaturesIDsString})`
   );
   return desiredCreaturesIDsString;
 };
+
 const rewardCreatures = async (eventID) => {
   await pool.query(
-    `UPDATE creatures set points = points + 1 WHERE is_killed = false AND event_id = $1`,
-    eventID
+    `UPDATE creatures set points = points + 1 WHERE is_dead = false AND event_id = $1`,
+    [eventID]
   );
 };
 
-const startGame = (eventID) => {
-  const { teamAID, teamBID } = getTwoTeams(eventID);
+const startGame = async (eventID) => {
+  const { teamAID, teamBID } = await getTwoTeams(eventID);
   /// run eat creatures function every 1 hour
+  console.log(eventID, teamAID, "from event and team ids");
   const killCreatureIntervalKey = setInterval(async () => {
     const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);
     const teamBKilledCreaturesIDs = await killCreatures(eventID, teamBID);
@@ -75,10 +76,22 @@ const startGame = (eventID) => {
       [teamBID]: teamBKilledCreaturesIDs,
       event_id: eventID,
     });
+    console.log(killMessage, "from killed Message ");
     sendMessageForClients(killMessage);
 
     await rewardCreatures(eventID);
   }, 60000);
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
+};
+
+const testGame = async () => {
+  const unkilledCreatures = await getUnKilledCreatures(3, 2);
+  const randomCreatures = await pickRandomCreature(unkilledCreatures);
+  const liveCreatures = await killCreatures(2, 3);
+};
+testGame();
+
+module.exports = {
+  startGame,
 };

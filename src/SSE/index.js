@@ -1,3 +1,5 @@
+const { sseReqArray } = require("../routes/sse");
+
 const sendMessage = (req, message) => {
   req.write(`data: ${message}\n\n`);
 };
