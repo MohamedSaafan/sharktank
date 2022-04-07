@@ -1,2 +1,3 @@
 node_modules
 passwords.js
+src/config/db_local.js
