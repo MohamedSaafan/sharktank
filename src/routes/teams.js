@@ -27,6 +27,8 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
   SELECT id FROM creatures where id =1 and event_id = 1  and is_dead = true;
   `);
   const eatenCreaturesArray = eatenCreatures.rows.map((item) => item.id);
+  if (eatenCreatures.rowCount === 0) return res.send([]);
+
   const team = teamQuery.rows[0];
   team.eaten_creatures = eatenCreaturesArray;
   res.send(team);

@@ -86,6 +86,7 @@ router.get("/events/:id/:teamId/creatures", async (req, res, next) => {
     `select address, points, is_picked , is_dead,id from creatures where team_id = $1 and event_id = $2;`,
     [teamID, eventID]
   );
+
   res.send({ creatures: creaturesQuery.rows });
 });
 module.exports = router;
