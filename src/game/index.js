@@ -1,4 +1,3 @@
-const { send } = require("express/lib/response");
 const pool = require("../config/db");
 const { sseReqArray } = require("../routes/sse.js");
 const { sendMessageForClients } = require("../SSE/index");
@@ -84,13 +83,6 @@ const startGame = async (eventID) => {
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
 };
-
-const testGame = async () => {
-  const unkilledCreatures = await getUnKilledCreatures(3, 2);
-  const randomCreatures = await pickRandomCreature(unkilledCreatures);
-  const liveCreatures = await killCreatures(2, 3);
-};
-testGame();
 
 module.exports = {
   startGame,

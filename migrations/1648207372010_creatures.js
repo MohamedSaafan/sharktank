@@ -11,7 +11,7 @@ exports.up = (pgm) => {
           team_id INTEGER,
           is_picked BOOLEAN DEFAULT FALSE , 
           time_picked TIMESTAMP, 
-          is_dead BOOLEAN DEFAULT FALSE,
+          is_dead BOOLEAN DEFAULT FALSE
           );`);
 };
 exports.down = (pgm) => {
