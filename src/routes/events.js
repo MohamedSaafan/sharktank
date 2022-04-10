@@ -42,6 +42,7 @@ const getEvents = async () => {
 
     events.forEach((item) => {
       if (eventItem.eventId === item.id) {
+        object.state = item.state;
         if (object.team_a) {
           object.team_b = {
             id: item.teamId,
@@ -88,5 +89,11 @@ router.get("/events/:id/:teamId/creatures", async (req, res, next) => {
   );
 
   res.send({ creatures: creaturesQuery.rows });
+});
+router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
+  const updateCreatureQuery = await pool.query(
+    `UPDATE creatures SET is_picked = true`
+  );
+  res.status(201).send({ message: "Fish Picked successfully" });
 });
 module.exports = router;
