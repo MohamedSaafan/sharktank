@@ -1,4 +1,5 @@
 const Router = require("express").Router;
+const res = require("express/lib/response");
 const pool = require("../config/db");
 const router = new Router();
 
@@ -29,6 +30,7 @@ const getEvents = async () => {
     GROUP BY events.id , teams.id;  
      `
   );
+  console.log(teamsQuery.rows, "from teams rows");
 
   const events = teamsQuery.rows.map((row) => {
     row.scheduledDate = new Date(row.scheduleDate).getTime();
@@ -37,11 +39,12 @@ const getEvents = async () => {
 
   const eventsListQuery = await pool.query(`SELECT * FROM events`);
   const eventsList = eventsListQuery.rows;
+
   const mappedEvents = eventsList.map((eventItem) => {
     const object = {};
-
     events.forEach((item) => {
-      if (eventItem.eventId === item.id) {
+      if (eventItem.id === item.eventId) {
+        console.log(eventItem, item, "from eventItem id and item id");
         object.state = item.state;
         if (object.team_a) {
           object.team_b = {
@@ -64,6 +67,7 @@ const getEvents = async () => {
 
     return object;
   });
+
   return mappedEvents;
 };
 
