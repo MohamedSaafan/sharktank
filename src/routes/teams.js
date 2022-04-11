@@ -26,8 +26,14 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
   const eatenCreatures = await pool.query(`
   SELECT id FROM creatures where id =1 and event_id = 1  and is_dead = true;
   `);
+  if (!eatenCreatures.rows) {
+    const team = teamQuery.rows[0];
+    team.eaten_creatures = [];
+    return res.send(team);
+  }
   const eatenCreaturesArray = eatenCreatures.rows.map((item) => item.id);
-  if (eatenCreatures.rowCount === 0 || !eatenCreatures) return res.send([]);
+  if (eatenCreatures.rowCount === 0 || !eatenCreatures.rows)
+    return res.send([]);
 
   const team = teamQuery.rows[0];
   team.eaten_creatures = eatenCreaturesArray;
