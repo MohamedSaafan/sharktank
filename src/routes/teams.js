@@ -23,9 +23,12 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
   `,
     [eventID, teamID]
   );
-  const eatenCreatures = await pool.query(`
-  SELECT id FROM creatures where id =1 and event_id = 1  and is_dead = true;
-  `);
+  const eatenCreatures = await pool.query(
+    `
+  SELECT id FROM creatures where   event_id = $1 and team_id = $2  and is_dead = true;
+  `,
+    [eventID, teamID]
+  );
   if (!eatenCreatures.rows) {
     const team = teamQuery.rows[0] || {};
     team.eaten_creatures = [];
