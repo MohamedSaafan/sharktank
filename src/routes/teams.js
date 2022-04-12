@@ -33,7 +33,7 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
   }
   const eatenCreaturesArray = eatenCreatures.rows.map((item) => item.id);
   if (eatenCreatures.rowCount === 0 || !eatenCreatures.rows)
-    team.eatenCreatures = [];
+    return res.send([]);
 
   const team = teamQuery.rows[0] || {};
   team.eaten_creatures = eatenCreaturesArray;
