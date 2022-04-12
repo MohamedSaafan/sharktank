@@ -87,6 +87,7 @@ eaten_fish:[id,id,id,id]
 
 api/v1/events/:id/:teamId/creatures
 
+```
 {
 creatures:[
 {
@@ -98,3 +99,21 @@ points:50
 }
 ]
 }
+```
+
+## SSE Message for Killed Creatures
+
+```
+{
+      [teamAID]: {
+        killed_creatures: teamAkilledCreaturesIDs,
+        sum_of_killed_points: +teamAkilledCreaturesPoints,
+      },
+      [teamBID]: {
+        killed_creatures: teamBKilledCreaturesIDs,
+        sum_of_killed_points: +teamBKilledCreaturesPoints,
+      },
+      event_id: eventID,
+}
+
+```
