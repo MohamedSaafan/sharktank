@@ -3,10 +3,12 @@ const eventRouter = require("./events");
 const teamsRouter = require("./teams");
 const sseRouter = require("./sse").router;
 const gameRouter = require("./game");
+const playersRouter = require("./players");
 const router = new Router();
 router.use(eventRouter);
 router.use(teamsRouter);
 router.use(sseRouter);
+router.use("/players", playersRouter);
 router.use("/game", gameRouter);
 router.get("/", (req, res, next) => {
   res.send("hello world!");
