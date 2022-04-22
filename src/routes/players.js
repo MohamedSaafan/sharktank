@@ -17,7 +17,8 @@ router.get("/:address/online-events", async (req, res, next) => {
     [playerAddress]
   );
   if (eventsQuery.rowCount === 0) return res.send([]);
-  res.send(eventsQuery.rows);
+  const eventsIDsArray = eventsQuery.rows.map((row) => row.event_id);
+  res.send(eventsIDsArray);
 });
 
 module.exports = router;
