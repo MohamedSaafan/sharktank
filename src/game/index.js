@@ -67,7 +67,7 @@ const getCreaturesPoints = async (creaturesArray, eventID) => {
   const query = await pool.query(
     `
     SELECT SUM(points) as sum_of_points FROM creatures
-    WHERE id IN ${creaturesArray.join()} and event_id = $1
+    WHERE id IN (${creaturesArray.join()}) and event_id = $1
     `,
     [eventID]
   );
@@ -77,17 +77,18 @@ const getCreaturesPoints = async (creaturesArray, eventID) => {
 const startGame = async (eventID) => {
   const { teamAID, teamBID } = await getTwoTeams(eventID);
   /// run eat creatures function every 1 hour
-  console.log(eventID, teamAID, "from event and team ids");
+  console.log(eventID, teamAID, teamBID, "from event and team ids");
   const killCreatureIntervalKey = setInterval(async () => {
     const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);
 
     const teamBKilledCreaturesIDs = await killCreatures(eventID, teamBID);
+    console.log(teamBKilledCreaturesIDs, "from killed creatures ids");
     const teamAkilledCreaturesPoints = await getCreaturesPoints(
       teamAkilledCreaturesIDs,
       eventID
     );
     const teamBKilledCreaturesPoints = await getCreaturesPoints(
-      teamBKilledCreaturesPoints,
+      teamBKilledCreaturesIDs,
       eventID
     );
     const killMessage = JSON.stringify({
@@ -106,10 +107,10 @@ const startGame = async (eventID) => {
 
     await rewardCreatures(eventID);
   }, 1500);
+
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
 };
-
 module.exports = {
   startGame,
 };

@@ -2,7 +2,7 @@ const { Router } = require("express");
 const pool = require("../config/db");
 const router = new Router();
 
-router.get("/:address/online-events", async (req, res, next) => {
+router.get("/players/:address/online-events", async (req, res, next) => {
   const playerAddress = req.params.address;
   // we need to get all the events the player has a creature in
   const eventsQuery = await pool.query(
@@ -19,6 +19,7 @@ router.get("/:address/online-events", async (req, res, next) => {
   if (eventsQuery.rowCount === 0) return res.send([]);
   const eventsIDsArray = eventsQuery.rows.map((row) => row.event_id);
   res.send(eventsIDsArray);
+  [{ event_id, team_id }];
 });
 
 module.exports = router;

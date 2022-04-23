@@ -10,6 +10,7 @@ router.get("/teams", (req, res, next) => {
 router.get("/teams/:id/:eventID", async (req, res, next) => {
   const teamID = req.params.id;
   const eventID = req.params.eventID;
+  if (!teamID || !eventID) res.send(400);
   const teamQuery = await pool.query(
     `
   SELECT  teams.id as "id",
