@@ -81,6 +81,14 @@ const getCreaturesPoints = async (creaturesArray, eventID) => {
   );
   return query.rows[0].sum_of_points;
 };
+const getTeamPoints = async (teamID, eventID) => {
+  const query = await pool.query(
+    ` SELECT SUM(points) as sum_of_points FROM creatures
+  WHERE team_id = $1 and  event_id = $2;`,
+    [teamID, eventID]
+  );
+  return query.rows.sum_of_points;
+};
 
 const startGame = async (eventID) => {
   const { teamAID, teamBID } = await getTwoTeams(eventID);
@@ -91,22 +99,17 @@ const startGame = async (eventID) => {
 
     const teamBKilledCreaturesIDs = await killCreatures(eventID, teamBID);
     console.log(teamBKilledCreaturesIDs, "from killed creatures ids");
-    const teamAkilledCreaturesPoints = await getCreaturesPoints(
-      teamAkilledCreaturesIDs,
-      eventID
-    );
-    const teamBKilledCreaturesPoints = await getCreaturesPoints(
-      teamBKilledCreaturesIDs,
-      eventID
-    );
+
+    const teamAPoints = await getTeamPoints(teamAID, eventID);
+    const teamBPoints = await getTeamPoints(teamBID, eventID);
     const killMessage = JSON.stringify({
       [teamAID]: {
         killed_creatures: teamAkilledCreaturesIDs,
-        sum_of_killed_points: +teamAkilledCreaturesPoints,
+        new_points: +teamAPoints,
       },
       [teamBID]: {
         killed_creatures: teamBKilledCreaturesIDs,
-        sum_of_killed_points: +teamBKilledCreaturesPoints,
+        new_points: +teamBPoints,
       },
       event_id: eventID,
     });
