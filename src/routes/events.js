@@ -89,7 +89,7 @@ router.get("/events/:id/:teamId/creatures", async (req, res, next) => {
   const eventID = req.params.id;
   const teamID = req.params.teamId;
   const creaturesQuery = await pool.query(
-    `select address, points, is_picked , is_dead,id from creatures where team_id = $1 and event_id = $2;`,
+    `select address, points, is_picked , is_dead,id from creatures where team_id = $1 and event_id = $2 limit 100;`,
     [teamID, eventID]
   );
 
