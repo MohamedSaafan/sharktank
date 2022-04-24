@@ -84,7 +84,7 @@ const getCreaturesPoints = async (creaturesArray, eventID) => {
 const getTeamPoints = async (teamID, eventID) => {
   const query = await pool.query(
     ` SELECT SUM(points) as points FROM creatures
-  WHERE team_id = $1 and  event_id = $2;`,
+  WHERE team_id = $1 and  event_id = $2 and is_dead = false; `,
     [teamID, eventID]
   );
   console.log(query.rows[0].points);
