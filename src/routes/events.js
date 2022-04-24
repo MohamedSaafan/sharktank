@@ -99,10 +99,15 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
   const eventID = req.params.id;
   const creatureID = req.params.creature_id;
   const updateCreatureQuery = await pool.query(
-    `UPDATE creatures SET is_picked = true where id = $1 and event_id = $2`
+    `UPDATE creatures SET is_picked = true where id = $1 and event_id = $2`,
+    [creatureID, eventID]
   );
   sendMessageForClients(
-    JSON.stringify({ event_id: eventID, creature_id: creatureID })
+    JSON.stringify({
+      event_id: eventID,
+      creature_id: creatureID,
+      type: "fish picked",
+    })
   );
   res.status(201).send({ message: "Fish Picked successfully" });
 });
