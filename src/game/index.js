@@ -99,7 +99,7 @@ const startGame = async (eventID) => {
     const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);
 
     const teamBKilledCreaturesIDs = await killCreatures(eventID, teamBID);
-    console.log(teamBKilledCreaturesIDs, "from killed creatures ids");
+    await rewardCreatures(eventID);
 
     const teamAPoints = await getTeamPoints(+teamAID, +eventID);
     const teamBPoints = await getTeamPoints(+teamBID, +eventID);
@@ -116,8 +116,6 @@ const startGame = async (eventID) => {
     });
     console.log(killMessage, "from killed Message ");
     sendMessageForClients(killMessage);
-
-    await rewardCreatures(eventID);
   }, 45000);
 
   //3 600 000 milli seconds equals one hour
