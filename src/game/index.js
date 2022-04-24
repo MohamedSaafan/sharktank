@@ -114,7 +114,7 @@ const startGame = async (eventID) => {
     sendMessageForClients(killMessage);
 
     await rewardCreatures(eventID);
-  }, 1500);
+  }, 45000);
 
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
