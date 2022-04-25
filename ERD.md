@@ -99,6 +99,9 @@ points:50
 }
 ]
 }
+
+api/v1/players/:address/online-events
+returns an array containing all the IDs of the online events a player has a creature in.
 ```
 
 ## SSE Message for Killed Creatures
