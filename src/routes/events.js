@@ -104,10 +104,14 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
     `UPDATE creatures SET is_picked = true where id = $1 and event_id = $2`,
     [creatureID, eventID]
   );
+  const getCreatureTeamQuery = await pool.query(
+    `SELECT team_id from creatures where creature_id = $1 and event_id = $2`,
+    [creatureID, eventID]
+  );
   sendMessageForClients(
     JSON.stringify({
       event_id: eventID,
-      creature_id: creatureID,
+      tean_id: getCreatureTeamQuery.rows[0].team_id,
       type: "pulled",
     })
   );
