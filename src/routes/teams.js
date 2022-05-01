@@ -43,7 +43,8 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
 
   const team = teamQuery.rows[0] || {};
   team.eaten_creatures = eatenCreaturesArray;
-  team.pulled_creatures = pulledCreatures.rows[0]?.num_of_pulled_creatures || 0;
+  team.pulled_creatures =
+    +pulledCreatures.rows[0]?.num_of_pulled_creatures || 0;
   res.send(team);
 });
 module.exports = router;
