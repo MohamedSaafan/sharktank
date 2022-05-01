@@ -65,6 +65,7 @@ const getEvents = async () => {
         }
       }
     });
+    console.log(object, "from object");
 
     return object;
   });
@@ -106,7 +107,7 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
     JSON.stringify({
       event_id: eventID,
       creature_id: creatureID,
-      type: "fish picked",
+      type: "pulled",
     })
   );
   res.status(201).send({ message: "Fish Picked successfully" });

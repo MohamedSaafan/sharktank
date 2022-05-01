@@ -30,6 +30,10 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
   `,
     [eventID, teamID]
   );
+  const pulledCreatures = await pool.query(
+    `SELECT COUNT(*) as num_of_pulled_creatures from creatures where event_id = $1 and team_id = $2 and is_pulled = true;`,
+    [eventID, teamID]
+  );
   if (!eatenCreatures.rows) {
     const team = teamQuery.rows[0] || {};
     team.eaten_creatures = [];
@@ -39,6 +43,7 @@ router.get("/teams/:id/:eventID", async (req, res, next) => {
 
   const team = teamQuery.rows[0] || {};
   team.eaten_creatures = eatenCreaturesArray;
+  team.pulled_creatures = pulledCreatures.rows[0]?.num_of_pulled_creatures || 0;
   res.send(team);
 });
 module.exports = router;

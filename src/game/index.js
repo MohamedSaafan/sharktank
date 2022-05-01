@@ -112,6 +112,7 @@ const startGame = async (eventID) => {
         new_points: +teamBPoints,
       },
       event_id: eventID,
+      type: "killed",
     });
     console.log(killMessage, "from killed Message ");
     sendMessageForClients(killMessage);
