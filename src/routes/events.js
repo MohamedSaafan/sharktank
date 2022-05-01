@@ -105,13 +105,13 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
     [creatureID, eventID]
   );
   const getCreatureTeamQuery = await pool.query(
-    `SELECT team_id from creatures where creature_id = $1 and event_id = $2`,
+    `SELECT team_id from creatures where id = $1 and event_id = $2`,
     [creatureID, eventID]
   );
   sendMessageForClients(
     JSON.stringify({
       event_id: eventID,
-      tean_id: getCreatureTeamQuery.rows[0].team_id,
+      team_id: getCreatureTeamQuery.rows[0].team_id,
       type: "pulled",
     })
   );
