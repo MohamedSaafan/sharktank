@@ -86,12 +86,13 @@ router.get("/events/:id", async (req, res, next) => {
   console.log(filteredEvents, "from events");
   res.send(filteredEvents[0]);
 });
-router.get("/events/:id/:teamId/creatures", async (req, res, next) => {
+router.get("/events/:id/:teamId/:address/creatures", async (req, res, next) => {
   const eventID = req.params.id;
   const teamID = req.params.teamId;
+  const address = req.params.address;
   const creaturesQuery = await pool.query(
-    `select address, points, is_picked , is_dead,id from creatures where team_id = $1 and event_id = $2 limit 10;`,
-    [teamID, eventID]
+    `select address, points, is_picked , is_dead,id from creatures where team_id = $1 and event_id = $2 and address = $3`,
+    [teamID, eventID, address]
   );
 
   res.send({ creatures: creaturesQuery.rows });
