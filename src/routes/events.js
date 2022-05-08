@@ -129,6 +129,11 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
   console.log(SSEMessage, "from message ");
   console.log(creatureDetails.points, "from points");
   // don't forget to return the points of the pulled fish
-  res.status(201).send({ message: "Fish Picked successfully" });
+  res
+    .status(201)
+    .send({
+      message: "Fish Picked successfully",
+      points: +creatureDetails.points,
+    });
 });
 module.exports = router;

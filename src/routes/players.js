@@ -17,6 +17,9 @@ router.get("/:address/online-events", async (req, res, next) => {
      `,
     [playerAddress]
   );
+  const onlineEvents = eventsQuery.rows;
+
+  // after getting the creatures we need to see the IDs of the events he joined in mark them as joined
 
   res.send(eventsQuery.rows);
 });
