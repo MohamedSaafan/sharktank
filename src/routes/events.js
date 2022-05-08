@@ -100,21 +100,35 @@ router.get("/events/:id/:teamId/:address/creatures", async (req, res, next) => {
 router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
   const eventID = req.params.id;
   const creatureID = req.params.creature_id;
+  // check if the creature is already eaten or not
+  const checkIfLiveQuey = await pool.query(
+    `select * from creatures where id = $1 and event_id = $2 and is_dead = false`,
+    [creatureID, eventID]
+  );
+  if (!checkIfLiveQuey.rowCount)
+    return res.status(405).send({ message: "Operation Not Permitted Error" });
   const updateCreatureQuery = await pool.query(
     `UPDATE creatures SET is_picked = true where id = $1 and event_id = $2`,
     [creatureID, eventID]
   );
-  const getCreatureTeamQuery = await pool.query(
-    `SELECT team_id from creatures where id = $1 and event_id = $2`,
+
+  const creatureDetailsQuery = await pool.query(
+    `SELECT team_id , points from creatures where id = $1 and event_id = $2`,
     [creatureID, eventID]
   );
-  sendMessageForClients(
-    JSON.stringify({
-      event_id: eventID,
-      team_id: getCreatureTeamQuery.rows[0].team_id,
-      type: "pulled",
-    })
-  );
+  if (!creatureDetailsQuery.rowCount)
+    return res.status(400).send({ message: "No Such Creature Found" });
+  const creatureDetails = creatureDetailsQuery.rows[0];
+  const SSEMessage = JSON.stringify({
+    event_id: eventID,
+    team_id: creatureDetails.team_id,
+    type: "pulled",
+    points: +creatureDetails.points,
+  });
+  sendMessageForClients(SSEMessage);
+  console.log(SSEMessage, "from message ");
+  console.log(creatureDetails.points, "from points");
+  // don't forget to return the points of the pulled fish
   res.status(201).send({ message: "Fish Picked successfully" });
 });
 module.exports = router;
