@@ -66,7 +66,7 @@ const killCreatures = async (eventID, teamID) => {
 
 const rewardCreatures = async (eventID) => {
   await pool.query(
-    `UPDATE creatures set points = points + 1 WHERE is_dead = false AND event_id = $1`,
+    `UPDATE creatures set points = points + 1 WHERE is_dead = false and is_picked = false AND event_id = $1`,
     [eventID]
   );
 };
