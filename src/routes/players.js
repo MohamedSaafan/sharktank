@@ -51,4 +51,17 @@ router.get("/:address/online-events", async (req, res, next) => {
   res.status(200).send(onlineEvents);
 });
 
+router.post("/:address/:eventID/:teamID", async (req, res, next) => {
+  // handle the join event
+  const { address, eventID, teamID } = req.params.address;
+  if (!address || !eventID || teamID)
+    return res.status(400).send({ message: "Invalid Input Error" });
+
+  const joinQuery = await pool.query(
+    `UPDATE creatures SET joined = true WHERE address = $1 AND event_id = $2 AND team_id = $3`,
+    [address, eventID, teamID]
+  );
+  res.status(204).send({ message: "User Joined Successfully" });
+});
+
 module.exports = router;
