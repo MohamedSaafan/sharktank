@@ -53,8 +53,9 @@ router.get("/:address/online-events", async (req, res, next) => {
 
 router.post("/:address/:eventID/:teamID", async (req, res, next) => {
   // handle the join event
-  const { address, eventID, teamID } = req.params.address;
-  if (!address || !eventID || teamID)
+  const { address, eventID, teamID } = req.params;
+  console.log(address, eventID, teamID, "from address, eventid , team id");
+  if (!address || !eventID || !teamID)
     return res.status(400).send({ message: "Invalid Input Error" });
 
   const joinQuery = await pool.query(
