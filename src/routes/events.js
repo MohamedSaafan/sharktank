@@ -3,7 +3,18 @@ const res = require("express/lib/response");
 const pool = require("../config/db");
 const { sendMessage, sendMessageForClients } = require("../SSE");
 const router = new Router();
-
+const getTeamPoints = async (teamID, eventID) => {
+  const teamAPoints = await pool.query(
+    `
+    select sum(points) as points from creatures where team_id = $1 and event_id = $2 and  is_dead = false
+   
+   
+   `,
+    [teamID, eventID]
+  );
+  if (!teamAPoints.rowCount) return 0;
+  return +teamAPoints.rows[0].points;
+};
 const getEvents = async () => {
   // the logic of points here isn't valid
   const teamsQuery = await pool.query(
@@ -32,7 +43,6 @@ const getEvents = async () => {
     GROUP BY events.id , teams.id;  
      `
   );
-  console.log(teamsQuery.rows, "from teams rows");
 
   const events = teamsQuery.rows.map((row) => {
     row.scheduledDate = new Date(row.scheduleDate).getTime();
@@ -44,9 +54,8 @@ const getEvents = async () => {
 
   const mappedEvents = eventsList.map((eventItem) => {
     const object = {};
-    events.forEach((item) => {
+    events.forEach(async (item) => {
       if (eventItem.id === item.eventId) {
-        console.log(eventItem, item, "from eventItem id and item id");
         object.state = item.state;
         if (object.team_a) {
           object.team_b = {
@@ -60,18 +69,31 @@ const getEvents = async () => {
             name: item.teamName,
             points: +item.points,
           };
-          object.id = item.eventId;
+
           object.schedule_date = item.scheduledDate;
+          object.id = eventItem.id;
           object.end_date = new Date(item.end_date).getTime();
         }
       }
     });
-    console.log(object, "from object");
 
     return object;
   });
+  const eventsWithPoints = await Promise.all(
+    mappedEvents.map(async (event) => {
+      console.log(event, "from event");
+      const teamAPoints = await getTeamPoints(event.team_a.id, event.id);
+      const teamBPoints = await getTeamPoints(event.team_b.id, event.id);
+      console.log(teamAPoints, teamBPoints, "from team a points and team b");
+      event.team_a.points = teamAPoints;
+      event.team_b.points = teamBPoints;
+      return event;
+    })
+  );
 
-  return mappedEvents;
+  console.log(eventsWithPoints, "from events with points");
+
+  return eventsWithPoints;
 };
 
 router.get("/events/", async (req, res, next) => {
