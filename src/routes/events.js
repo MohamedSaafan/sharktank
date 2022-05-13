@@ -5,6 +5,7 @@ const { sendMessage, sendMessageForClients } = require("../SSE");
 const router = new Router();
 
 const getEvents = async () => {
+  // the logic of points here isn't valid
   const teamsQuery = await pool.query(
     `SELECT events.id as "eventId" ,
     events.is_scheduled as "isScheduled",
@@ -28,6 +29,7 @@ const getEvents = async () => {
     FROM events 
     JOIN teams ON team_a = teams.id OR team_b = teams.id 
     JOIN creatures ON creatures.event_id = events.id AND creatures.team_id = teams.id
+    WHERE creatures.is_dead = false
     GROUP BY events.id , teams.id;  
      `
   );
@@ -129,11 +131,9 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
   console.log(SSEMessage, "from message ");
   console.log(creatureDetails.points, "from points");
   // don't forget to return the points of the pulled fish
-  res
-    .status(201)
-    .send({
-      message: "Fish Picked successfully",
-      points: +creatureDetails.points,
-    });
+  res.status(201).send({
+    message: "Fish Picked successfully",
+    points: +creatureDetails.points,
+  });
 });
 module.exports = router;

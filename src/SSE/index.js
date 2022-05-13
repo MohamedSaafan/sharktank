@@ -14,5 +14,18 @@ const sendMessageForClients = (message) => {
     console.log("\n\n message sent successfylly \n\n");
   });
 };
+const sendMessageForPlayerCreatures = (killedCreaturesArray) => {
+  sseReqArray.forEach((req) => {
+    const address = req.params.address;
+    if (address) {
+      killedCreaturesArray.map((creature) => {
+        if (creature.address == address) {
+          return { creatureID: creature.id, creaturePoints: creature.points };
+        }
+      });
+      res.write(`data: ${message}\n\n`);
+    }
+  });
+};
 
 module.exports = { sendMessage, sendMessageForClients };
