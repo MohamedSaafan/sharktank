@@ -29,7 +29,6 @@ const getEvents = async () => {
     FROM events 
     JOIN teams ON team_a = teams.id OR team_b = teams.id 
     JOIN creatures ON creatures.event_id = events.id AND creatures.team_id = teams.id
-    WHERE creatures.is_dead = false
     GROUP BY events.id , teams.id;  
      `
   );
