@@ -65,7 +65,29 @@ router.post("/:address/:eventID/:teamID", async (req, res, next) => {
   );
   res.status(204).send({ message: "User Joined Successfully" });
 });
+router.get("/registered/:address", async (req, res, next) => {
+  const address = req.params.address;
+  if (!address) {
+    return res.status(400).send({ message: "You should provide your address" });
+  }
+  const fetchRegisteredQuery = await pool.query(
+    `SELECT count(*) as "numOfRegestered" from test_events`
+  );
+  const numberOfRegistered = fetchRegisteredQuery.rows[0].numOfRegestered;
+
+  const checkRegisteredQuery = await pool.query(
+    "SELECT * FROM test_events where address = $1",
+    [address]
+  );
+  let isRegistered = true;
+  if (!checkRegisteredQuery.rowCount) isRegistered = false;
+  res.status(200).send({
+    numberOfRegistered,
+    isRegistered,
+  });
+});
 router.post("/register", async (req, res, next) => {
+  console.log(req.body);
   const address = req.body.address;
   if (!address) {
     return res.status(400).send({ message: "No Address is Provided" });
@@ -78,13 +100,21 @@ router.post("/register", async (req, res, next) => {
     return res.status(400).send({ message: "User Already Registered" });
   }
   const insertUserQuery = await pool.query(
-    `INSERT INTO test_events (address,event_id) VALUES ($1,$2)`,
-    [address, event_id]
+    `INSERT INTO test_events (address,event_id) VALUES ($1,1)`,
+    [address]
   );
   res.status(201).send({ message: "User Registered Successfully" });
   // check if there is provided address
   // check if the address is registered
   // register the address
+});
+router.post("/unregister", async (req, res) => {
+  const address = req.body.address;
+  const unRegisterQuery = await pool.query(
+    `delete from test_events where address = $1`,
+    [address]
+  );
+  res.status(200).send({ message: "Unregistered successfully" });
 });
 
 module.exports = router;

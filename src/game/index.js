@@ -14,7 +14,7 @@ const getTwoTeams = async (event_id) => {
 
 const getUnKilledCreatures = async (teamID, eventID) => {
   const selectUnKilledQuery = await pool.query(
-    ` select id from creatures where team_id = $1 and  event_id = $2 and is_dead = false;`,
+    ` select id from creatures where team_id = $1 and  event_id = $2 and is_dead = false and is_picked = false;`,
     [teamID, eventID]
   );
   return selectUnKilledQuery.rows.map((row) => row.id);
