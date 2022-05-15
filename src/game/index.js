@@ -90,6 +90,9 @@ const getTeamPoints = async (teamID, eventID) => {
   console.log(query.rows[0].points);
   return query.rows[0].points;
 };
+const convertStrArrToNumArr = (arr) => {
+  return arr.map((item) => +item);
+};
 
 const startGame = async (eventID) => {
   const { teamAID, teamBID } = await getTwoTeams(eventID);
@@ -104,11 +107,11 @@ const startGame = async (eventID) => {
     const teamBPoints = await getTeamPoints(+teamBID, +eventID);
     const killMessage = JSON.stringify({
       [teamAID]: {
-        killed_creatures: teamAkilledCreaturesIDs,
+        killed_creatures: convertStrArrToNumArr(teamAkilledCreaturesIDs),
         new_points: +teamAPoints,
       },
       [teamBID]: {
-        killed_creatures: teamBKilledCreaturesIDs,
+        killed_creatures: convertStrArrToNumArr(teamBKilledCreaturesIDs),
         new_points: +teamBPoints,
       },
       event_id: eventID,

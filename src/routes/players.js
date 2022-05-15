@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { append } = require("express/lib/response");
 const pool = require("../config/db");
 const router = new Router();
 
@@ -63,6 +64,21 @@ router.post("/:address/:eventID/:teamID", async (req, res, next) => {
     [address, eventID, teamID]
   );
   res.status(204).send({ message: "User Joined Successfully" });
+});
+app.post("/register", (req, res, next) => {
+  const address = req.body.address;
+  if(!address){
+    return res.status(400).send({"message":"No Address is Provided"})
+  }
+  const findAddressQuery = await pool.query(`SELECT * FROM test_events where address = $1`,[address]);
+  if(findAddressQuery.rowCount){
+    return res.status(400).send({"message":"User Already Registered"});
+  }
+  const insertUserQuery = await pool.query(`INSERT INTO test_events (address,event_id) VALUES ($1,$2)`,[address,event_id]);
+  res.status(201).send({"message":"User Registered Successfully"})
+  // check if there is provided address
+  // check if the address is registered
+  // register the address
 });
 
 module.exports = router;

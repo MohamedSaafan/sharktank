@@ -36,6 +36,13 @@
 | id   | serial    |
 | name | varchar   |
 
+### test-events
+
+| name     | Data type |
+| -------- | --------- |
+| address  | varchar   |
+| event_id | integer   |
+
 ### API End Points
 
 api/v1/events
