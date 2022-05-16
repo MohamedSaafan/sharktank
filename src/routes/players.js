@@ -96,6 +96,7 @@ router.post("/register", async (req, res, next) => {
     `SELECT * FROM test_events where address = $1`,
     [address]
   );
+
   if (findAddressQuery.rowCount) {
     return res.status(400).send({ message: "User Already Registered" });
   }
@@ -103,6 +104,12 @@ router.post("/register", async (req, res, next) => {
     `INSERT INTO test_events (address,event_id) VALUES ($1,1)`,
     [address]
   );
+  for (let i = 0; i < 9; i++) {
+    await pool.query(
+      `insert into creatures (event_id,address,points,team_id,is_picked,is_dead,joined) VALUES(1,$1,0,2,false,false,false)`,
+      [address]
+    );
+  }
   res.status(201).send({ message: "User Registered Successfully" });
   // check if there is provided address
   // check if the address is registered
