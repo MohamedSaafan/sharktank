@@ -12,8 +12,8 @@ router.get("/:address/online-events", async (req, res, next) => {
 
   // we need to get all the events the player has a creature in
   const eventsQuery = await pool.query(
-    `SELECT DISTINCT event_id,creatures.team_id
-    FROM creatures JOIN events ON creatures.event_id = events.id
+    `SELECT DISTINCT event_id,creatures.team_id,teams.name as "team_name"
+    FROM creatures JOIN events ON creatures.event_id = events.id JOIN teams on creatures.team_id = teams.id
     where address = $1
     AND 
     events.schedule_date <= now() 
@@ -25,6 +25,7 @@ router.get("/:address/online-events", async (req, res, next) => {
   );
 
   const onlineEvents = eventsQuery.rows;
+  console.log(onlineEvents.rows, "from online events");
   const joinedEventsQuery = await pool.query(
     `SELECT DISTINCT event_id FROM creatures WHERE address = $1 and joined = true `,
     [playerAddress]
