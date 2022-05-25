@@ -34,5 +34,11 @@ router.get("/reset", async (req, res, next) => {
   await pool.query(`update creatures set is_dead = false, is_picked = false`);
   res.status(201).send({ message: "creatures reseted successfully" });
 });
+router.get("/kill", async (req, res) => {
+  const killCreaturesQuery = await pool.query(
+    `UPDATE creatures SET is_dead = true , is_picked = false`
+  );
+  res.status(200).send({ message: "Creatures Killed Sucessfully" });
+});
 
 module.exports = router;
