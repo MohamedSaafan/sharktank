@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { append } = require("express/lib/response");
 const pool = require("../config/db");
+const pickRandomNumber = require("../helpers/pickRandomNum");
 const router = new Router();
 
 router.get("/:address/online-events", async (req, res, next) => {
@@ -101,14 +102,16 @@ router.post("/register", async (req, res, next) => {
   if (findAddressQuery.rowCount) {
     return res.status(400).send({ message: "User Already Registered" });
   }
+
   const insertUserQuery = await pool.query(
     `INSERT INTO test_events (address,event_id) VALUES ($1,1)`,
     [address]
   );
+  const teamID = pickRandomNumber(2, 3);
   for (let i = 0; i < 9; i++) {
     await pool.query(
-      `insert into creatures (event_id,address,points,team_id,is_picked,is_dead,joined) VALUES(1,$1,0,2,false,false,false)`,
-      [address]
+      `insert into creatures (event_id,address,points,team_id,is_picked,is_dead,joined) VALUES(1,$1,0,$2,false,false,false)`,
+      [address, teamID]
     );
   }
   res.status(201).send({ message: "User Registered Successfully" });

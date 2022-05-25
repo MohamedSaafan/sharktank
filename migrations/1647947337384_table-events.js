@@ -9,9 +9,9 @@ exports.up = (pgm) => {
        team_a INTEGER,
        team_b INTEGER,
        schedule_date TIMESTAMP,
-       is_scheduled BOOLEAN DEFAULT true,
-      duration INTERVAL,
-      finished BOOLEAN 
+       is_scheduled BOOLEAN DEFAULT false,
+      duration INTERVAL DEFAULT '7 00:00:00',
+      finished BOOLEAN DEFAULT false
    );
     `);
 };

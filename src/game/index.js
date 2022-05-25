@@ -1,6 +1,9 @@
 const pool = require("../config/db");
-const { sseReqArray } = require("../routes/sse.js");
 const { sendMessageForClients } = require("../SSE/index");
+
+process.on("message", (msg) => {
+  startGame(msg.eventID);
+});
 
 const getTwoTeams = async (event_id) => {
   const getTeamsQuery = await pool.query(
@@ -34,6 +37,7 @@ const pickRandomCreature = (liveCreaturesIDs) => {
   return selectedCreaturesIndeces;
 };
 const killCreatures = async (eventID, teamID) => {
+  console.log("from the first round");
   const liveCreaturesIDs = await getUnKilledCreatures(teamID, eventID);
   if (liveCreaturesIDs.length < 10) {
     if (liveCreaturesIDs.length === 0) {
@@ -83,21 +87,57 @@ const getCreaturesPoints = async (creaturesArray, eventID) => {
 };
 const getTeamPoints = async (teamID, eventID) => {
   const query = await pool.query(
-    ` SELECT SUM(points) as points FROM creatures
+    ` SELECT COALESCE(SUM(points),0) as points FROM creatures
   WHERE team_id = $1 and  event_id = $2 and is_dead = false; `,
     [teamID, eventID]
   );
-  console.log(query.rows[0].points);
+  console.log(query.rows[0].points, "from points");
   return query.rows[0].points;
 };
 const convertStrArrToNumArr = (arr) => {
   return arr.map((item) => +item);
 };
 
+const checkIfGameFinished = async (
+  teamAKilledCreatures,
+  teamBKilledCreatures,
+  teamAPoints,
+  teamBPoints,
+  eventID
+) => {
+  console.log(teamAPoints, teamBPoints, "from teamAPoints and teamBPoints");
+  if (teamAKilledCreatures.length === 0 && teamBKilledCreatures.length === 0) {
+    const teams = await getTwoTeams(eventID);
+    console.log(teams, "from teams inside the finish function");
+    // now the game is finished
+    const finishEventQuery = await pool.query(
+      `UPDATE events set finished = true WHERE id = $1`,
+      [eventID]
+    );
+    const intTeamAPoints = +teamAPoints;
+    const intTeamBPoints = +teamBPoints;
+    // send the sse of the game finished message
+    sendMessageForClients({
+      type: "gameOver",
+      eventID,
+      intTeamAPoints,
+      intTeamBPoints,
+    });
+    console.log({
+      type: "gameOver",
+      eventID,
+      intTeamAPoints,
+      intTeamBPoints,
+    });
+
+    console.log(`event Number: ${eventID} Finished`);
+
+    process.exit();
+  }
+};
+
 const startGame = async (eventID) => {
   const { teamAID, teamBID } = await getTwoTeams(eventID);
-  /// run eat creatures function every 1 hour
-  console.log(eventID, teamAID, teamBID, "from event and team ids");
   const killCreatureIntervalKey = setInterval(async () => {
     const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);
 
@@ -119,8 +159,17 @@ const startGame = async (eventID) => {
     });
     console.log(killMessage, "from killed Message ");
     sendMessageForClients(killMessage);
-  }, 20000);
-
+    console.log(`eventID number : ${eventID} Still Running`);
+    checkIfGameFinished(
+      teamAkilledCreaturesIDs,
+      teamBKilledCreaturesIDs,
+      teamAPoints,
+      teamBPoints,
+      eventID
+    );
+  }, 1000);
+  const teamPoints = await getTeamPoints(2, 1);
+  console.log(teamPoints, "from teams points");
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
 };
