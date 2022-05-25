@@ -38,6 +38,7 @@ router.get("/kill", async (req, res) => {
   const killCreaturesQuery = await pool.query(
     `UPDATE creatures SET is_dead = true , is_picked = false`
   );
+  const updateEvents = await pool.query(`UPDATE events set finished = false;`);
   res.status(200).send({ message: "Creatures Killed Sucessfully" });
 });
 
