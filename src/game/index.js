@@ -44,11 +44,7 @@ const killCreatures = async (eventID, teamID) => {
       return [];
     }
     // kill all of them
-    console.log(
-      liveCreaturesIDs,
-      "from live creatures ids\n",
-      liveCreaturesIDs.toString()
-    );
+
     const killCreaturesQuery = await pool.query(
       `UPDATE CREATURES SET is_dead = true where id IN (${liveCreaturesIDs.join()})`
     );
@@ -91,7 +87,6 @@ const getTeamPoints = async (teamID, eventID) => {
   WHERE team_id = $1 and  event_id = $2 and is_dead = false; `,
     [teamID, eventID]
   );
-  console.log(query.rows[0].points, "from points");
   return query.rows[0].points;
 };
 const convertStrArrToNumArr = (arr) => {
@@ -130,8 +125,6 @@ const checkIfGameFinished = async (
       intTeamBPoints,
     });
 
-    console.log(`event Number: ${eventID} Finished`);
-
     process.exit();
   }
 };
@@ -157,9 +150,7 @@ const startGame = async (eventID) => {
       event_id: eventID,
       type: "killed",
     });
-    console.log(killMessage, "from killed Message ");
     sendMessageForClients(killMessage);
-    console.log(`eventID number : ${eventID} Still Running`);
     checkIfGameFinished(
       teamAkilledCreaturesIDs,
       teamBKilledCreaturesIDs,
@@ -167,9 +158,7 @@ const startGame = async (eventID) => {
       teamBPoints,
       eventID
     );
-  }, 1000);
-  const teamPoints = await getTeamPoints(2, 1);
-  console.log(teamPoints, "from teams points");
+  }, 25000);
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
 };
