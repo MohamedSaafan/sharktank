@@ -1,5 +1,8 @@
 const pool = require("../config/db");
 const { sendMessageForClients } = require("../SSE/index");
+const sendSSEMessageForClients = (message) => {
+  process.send({ type: "sendSSEMessage", message });
+};
 
 process.on("message", (msg) => {
   startGame(msg.eventID);
@@ -112,12 +115,16 @@ const checkIfGameFinished = async (
     const intTeamAPoints = +teamAPoints;
     const intTeamBPoints = +teamBPoints;
     // send the sse of the game finished message
-    sendMessageForClients({
-      type: "gameOver",
-      eventID,
-      intTeamAPoints,
-      intTeamBPoints,
-    });
+    console.log("before sending the game over sse message");
+    sendSSEMessageForClients(
+      JSON.stringify({
+        type: "gameOver",
+        eventID,
+        intTeamAPoints,
+        intTeamBPoints,
+      })
+    );
+
     console.log({
       type: "gameOver",
       eventID,
@@ -150,7 +157,7 @@ const startGame = async (eventID) => {
       event_id: eventID,
       type: "killed",
     });
-    sendMessageForClients(killMessage);
+    sendSSEMessageForClients(killMessage);
     checkIfGameFinished(
       teamAkilledCreaturesIDs,
       teamBKilledCreaturesIDs,

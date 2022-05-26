@@ -1,6 +1,7 @@
 const { sseReqArray } = require("../routes/sse");
 
 const sendMessage = (res, message) => {
+  console.log(res, "from res");
   try {
     res.write(`data: ${message}\n\n`);
   } catch (err) {
@@ -9,9 +10,10 @@ const sendMessage = (res, message) => {
   }
 };
 const sendMessageForClients = (message) => {
+  console.log(sseReqArray.length, "from the length of the sse array");
   sseReqArray.forEach((res) => {
     sendMessage(res, message);
-    console.log("\n\n message sent successfylly \n\n");
+    console.log("\n\n message sent successfylly \n\n", message);
   });
 };
 const sendMessageForPlayerCreatures = (killedCreaturesArray) => {

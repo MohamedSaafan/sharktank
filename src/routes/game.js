@@ -1,5 +1,6 @@
 const pool = require("../config/db_production");
 const { fork } = require("child_process");
+const { sendMessageForClients } = require("../SSE");
 
 const Router = require("express").Router;
 const router = new Router();
@@ -7,6 +8,9 @@ const router = new Router();
 const activeGames = [];
 
 router.get("/start/:eventID", (req, res, next) => {
+  sendMessageForClients(
+    JSON.stringify({ message: "Game Started Successfully" })
+  );
   const eventID = req.params.eventID;
   if (!eventID || typeof +eventID !== "number")
     return res.status(400).send({ message: "You Should Provide a game ID" });
@@ -21,6 +25,12 @@ router.get("/start/:eventID", (req, res, next) => {
   try {
     const childProcess = fork("./src/game/index.js");
     childProcess.send({ eventID });
+    childProcess.on("message", (data) => {
+      if (data.type === "sendSSEMessage") {
+        console.log("about to send messages");
+        return sendMessageForClients(data.message);
+      }
+    });
 
     activeGames.push(+eventID);
     res.send({ message: "Game Started Successfully" });

@@ -3,7 +3,10 @@ const sseReqArray = [];
 
 router.get("/monitor", (req, res, next) => {
   res.setHeader("Content-Type", "text/event-stream");
-  const message = "you have subscribed sucessfully";
+  const message = JSON.stringify({
+    type: "connection",
+    message: "Connection Accepted!",
+  });
   res.write(`data: ${message}\n\n`);
   sseReqArray.push(res);
   // const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
