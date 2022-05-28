@@ -104,7 +104,6 @@ const checkIfGameFinished = async (
 ) => {
   if (teamAKilledCreatures.length === 0 && teamBKilledCreatures.length === 0) {
     const teams = await getTwoTeams(eventID);
-    console.log(teams, "from teams inside the finish function");
     // now the game is finished
     const finishEventQuery = await pool.query(
       `UPDATE events set finished = true WHERE id = $1`,
@@ -157,6 +156,7 @@ const startGame = async (eventID) => {
       event_id: eventID,
       type: "killed",
     });
+
     sendSSEMessageForClients(killMessage);
     checkIfGameFinished(
       teamAkilledCreaturesIDs,
