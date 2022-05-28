@@ -51,7 +51,7 @@ router.get("/reset", async (req, res, next) => {
     `update creatures set is_dead = false, is_picked = false, points = 0`
   );
   await pool.query(
-    `UPDATE events set finished = false , started = false where schedule_date + duration < now()`
+    `UPDATE events set finished = false , started = false where schedule_date + duration >= now() `
   );
 
   res.status(201).send({ message: "creatures reseted successfully" });
