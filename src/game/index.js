@@ -135,7 +135,7 @@ const checkIfGameFinished = async (
 
 const startGame = async (eventID) => {
   console.log("game with id : ", eventID, " Started Successfully");
-  sendSSEMessageForClients({ type: "gameStarted", eventID });
+  sendSSEMessageForClients(JSON.stringify({ type: "gameStarted", eventID }));
   const { teamAID, teamBID } = await getTwoTeams(eventID);
   const killCreatureIntervalKey = setInterval(async () => {
     const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);

@@ -9,7 +9,6 @@ const startGames = async () => {
     const eventsQuery = await pool.query(
       `SELECT id, schedule_date FROM events WHERE schedule_date < now() and started = false and finished = false `
     );
-    console.log(eventsQuery.rows, "from events Query rows");
 
     eventsQuery.rows.map(async (event) => {
       hitStartGame(event.id);
