@@ -117,8 +117,6 @@ const checkIfGameFinished = async (
       JSON.stringify({
         type: "gameOver",
         eventID,
-        intTeamAPoints,
-        intTeamBPoints,
       })
     );
 
@@ -135,6 +133,7 @@ const checkIfGameFinished = async (
 
 const startGame = async (eventID) => {
   console.log("game with id : ", eventID, " Started Successfully");
+
   sendSSEMessageForClients(JSON.stringify({ type: "gameStarted", eventID }));
   const { teamAID, teamBID } = await getTwoTeams(eventID);
   const killCreatureIntervalKey = setInterval(async () => {

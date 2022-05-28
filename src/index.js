@@ -2,8 +2,7 @@ const express = require("express");
 const router = require("./routes");
 const cors = require("cors");
 const app = express();
-const { fork } = require("child_process");
-const childProcess = fork("./src/helpers/startGames.js");
+
 app.use(cors());
 
 app.use("/api/v1", router);

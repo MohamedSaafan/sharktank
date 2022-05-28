@@ -17,12 +17,25 @@ const hitStartGame = async (eventID) => {
   childProcess.send({ eventID });
   childProcess.on("message", (data) => {
     if (data.type === "sendSSEMessage") {
+      console.log("from sending message from the root process");
       return sendMessageForClients(data.message);
     }
   });
 
   activeGames.push(+eventID);
 };
+let startGamesProcess;
+router.get("/startGames", (req, res, next) => {
+  startGamesProcess = fork("./src/helpers/startGames.js");
+  startGamesProcess.on("message", (msg) => {
+    console.log("from sending the message from the parent process");
+    if (msg.type === "sendSSEMessage") {
+      console.log("message arrived to the root process");
+      return sendMessageForClients(msg.message);
+    }
+  });
+  res.status(200).send({ message: "Games Started Successfully" });
+});
 
 router.get("/start/:eventID", (req, res, next) => {
   const eventID = req.params.eventID;
