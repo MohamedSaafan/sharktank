@@ -3,6 +3,7 @@ const { sseReqArray } = require("../shared/state.js");
 
 router.get("/monitor", (req, res, next) => {
   res.setHeader("Content-Type", "text/event-stream");
+  console.log(sseReqArray.length, "from sse Req Array length");
   const message = JSON.stringify({
     type: "connection",
     message: "Connection Accepted!",

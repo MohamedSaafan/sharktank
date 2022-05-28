@@ -40,7 +40,6 @@ const pickRandomCreature = (liveCreaturesIDs) => {
   return selectedCreaturesIndeces;
 };
 const killCreatures = async (eventID, teamID) => {
-  console.log("from the first round");
   const liveCreaturesIDs = await getUnKilledCreatures(teamID, eventID);
   if (liveCreaturesIDs.length < 10) {
     if (liveCreaturesIDs.length === 0) {
