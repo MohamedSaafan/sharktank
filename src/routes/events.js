@@ -55,9 +55,7 @@ const getEvents = async () => {
     const object = {};
     events.forEach(async (item) => {
       if (eventItem.id === item.eventId) {
-        eventItem.finished
-          ? (object.state = "finished")
-          : (object.state = item.state);
+        object.state = item.state;
         if (object.team_a) {
           object.team_b = {
             id: item.teamId,
