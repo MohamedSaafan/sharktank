@@ -1,5 +1,5 @@
 const router = new require("express").Router();
-const sseReqArray = [];
+const { sseReqArray } = require("../shared/state.js");
 
 router.get("/monitor", (req, res, next) => {
   res.setHeader("Content-Type", "text/event-stream");

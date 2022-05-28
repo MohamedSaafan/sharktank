@@ -55,7 +55,9 @@ const getEvents = async () => {
     const object = {};
     events.forEach(async (item) => {
       if (eventItem.id === item.eventId) {
-        object.state = item.state;
+        eventItem.finished
+          ? (object.state = "finished")
+          : (object.state = item.state);
         if (object.team_a) {
           object.team_b = {
             id: item.teamId,
@@ -80,17 +82,13 @@ const getEvents = async () => {
   });
   const eventsWithPoints = await Promise.all(
     mappedEvents.map(async (event) => {
-      console.log(event, "from event");
       const teamAPoints = await getTeamPoints(event.team_a.id, event.id);
       const teamBPoints = await getTeamPoints(event.team_b.id, event.id);
-      console.log(teamAPoints, teamBPoints, "from team a points and team b");
       event.team_a.points = teamAPoints;
       event.team_b.points = teamBPoints;
       return event;
     })
   );
-
-  console.log(eventsWithPoints, "from events with points");
 
   return eventsWithPoints;
 };
