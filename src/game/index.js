@@ -116,7 +116,7 @@ const checkIfGameFinished = async (
     sendSSEMessageForClients(
       JSON.stringify({
         type: "gameOver",
-        eventID,
+        event_id: eventID,
       })
     );
 
