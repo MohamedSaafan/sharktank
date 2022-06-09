@@ -159,6 +159,7 @@ const startGame = async (eventID) => {
     });
 
     sendSSEMessageForClients(killMessage);
+    console.log("from sending messages after increasing points");
     checkIfGameFinished(
       teamAkilledCreaturesIDs,
       teamBKilledCreaturesIDs,
