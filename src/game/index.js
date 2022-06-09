@@ -137,6 +137,7 @@ const startGame = async (eventID) => {
   sendSSEMessageForClients(JSON.stringify({ type: "gameStarted", eventID }));
   const { teamAID, teamBID } = await getTwoTeams(eventID);
   const anHour = 3.6e6;
+  const aMinute = 60000;
   const doGameRound = setInterval(async () => {
     const teamAkilledCreaturesIDs = await killCreatures(eventID, teamAID);
 
@@ -165,7 +166,7 @@ const startGame = async (eventID) => {
       teamBPoints,
       eventID
     );
-  }, anHour);
+  }, aMinute);
   //3 600 000 milli seconds equals one hour
   // run reward creatures every hour after the eat creatures passed
 };
