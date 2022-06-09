@@ -171,6 +171,7 @@ const getTeamIDByName = async (teamName) => {
   }
   return getTeamQuery.rows[0].id;
 };
+// insert event end point
 router.post("/events", async (req, res, next) => {
   const {
     teamAName,
