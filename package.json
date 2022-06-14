@@ -20,7 +20,8 @@
     "express": "^4.17.3",
     "node-pg": "^1.0.1",
     "node-pg-migrate": "^6.2.1",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

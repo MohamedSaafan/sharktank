@@ -1,4 +1,4 @@
-const sseReqArray = [];
+let sseReqArray = [];
 const activeGames = [];
 
 module.exports = {
