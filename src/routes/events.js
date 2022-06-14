@@ -1,9 +1,12 @@
 const Router = require("express").Router;
-const { append } = require("express/lib/response");
-const res = require("express/lib/response");
+const addEventRouter = require("./add-event");
 const pool = require("../config/db");
-const { sendMessage, sendMessageForClients } = require("../SSE");
+const { sendMessageForClients } = require("../SSE");
 const router = new Router();
+
+//middlewares
+router.use(addEventRouter);
+
 const getTeamPoints = async (teamID, eventID) => {
   const teamAPoints = await pool.query(
     `
@@ -14,6 +17,7 @@ const getTeamPoints = async (teamID, eventID) => {
   if (!teamAPoints.rowCount) return 0;
   return +teamAPoints.rows[0].points;
 };
+
 const getEvents = async () => {
   // the logic of points here isn't valid
   const teamsQuery = await pool.query(
@@ -31,7 +35,10 @@ const getEvents = async () => {
           WHEN events.duration + events.schedule_date < now() + events.duration   
                 OR 
                 events.duration + events.schedule_date = now() + events.duration THEN 
-                  CASE WHEN events.duration + events.schedule_date < now() THEN 'finished' 
+                  CASE WHEN events.duration + events.schedule_date < now() 
+                OR events.finished = true   
+                THEN 'finished' 
+               
                   ELSE 'live' END
           WHEN events.duration + events.schedule_date > now() + events.duration AND events.is_scheduled = true THEN 'scheduled' END
       END as "state",
@@ -106,6 +113,7 @@ router.get("/events/:id", async (req, res, next) => {
   console.log(filteredEvents, "from events");
   res.send(filteredEvents[0]);
 });
+
 router.get("/events/:id/:teamId/:address/creatures", async (req, res, next) => {
   const eventID = req.params.id;
   const teamID = req.params.teamId;
@@ -117,6 +125,7 @@ router.get("/events/:id/:teamId/:address/creatures", async (req, res, next) => {
 
   res.send({ creatures: creaturesQuery.rows });
 });
+
 router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
   const eventID = req.params.id;
   const creatureID = req.params.creature_id;
@@ -154,109 +163,5 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
     points: +creatureDetails.points,
   });
 });
-const getTeamIDByName = async (teamName) => {
-  const getTeamQuery = await pool.query(
-    `SELECT id FROM teams where name = $1`,
-    [teamName]
-  );
-  console.log(getTeamQuery.rowCount, "from row count");
-  if (!getTeamQuery.rowCount) {
-    await pool.query(`INSERT INTO teams (name) values ($1)`, [teamName]);
-    const teamIDQuery = await pool.query(
-      `SELECT id FROM teams where name = $1`,
-      [teamName]
-    );
 
-    return teamIDQuery.rows[0].id;
-  }
-  return getTeamQuery.rows[0].id;
-};
-// insert event end point
-router.post("/events", async (req, res, next) => {
-  const {
-    teamAName,
-    teamBName,
-    scheduleDate,
-    isScheduled,
-    duration,
-    finished,
-  } = req.body;
-  const client = await pool.connect();
-  try {
-    client.query("BEGIN;");
-    const teamAID = await getTeamIDByName(teamAName);
-    const teamBID = await getTeamIDByName(teamBName);
-    console.log(duration, "from durtion");
-    await client.query(
-      `INSERT INTO events (team_a,team_b,schedule_date,is_scheduled,duration,finished) 
-        VALUES (
-          $1,$2,$3,$4,$5::INTERVAL,$6
-        )
-      
-      `,
-      [
-        teamAID,
-        teamBID,
-        new Date(scheduleDate),
-        isScheduled,
-        duration,
-        finished,
-      ]
-    );
-    const eventIDQuery = await client.query(
-      `select id from events WHERE team_a = $1 AND team_b = $2 AND schedule_date = $3 `,
-      [teamAID, teamBID, new Date(scheduleDate)]
-    );
-    const eventID = eventIDQuery.rows[0].id;
-
-    await client.query(
-      `INSERT INTO creatures (
-      event_id,
-      address,
-      points,
-      team_id,
-      is_picked,
-      is_dead,
-      joined
-    ) VALUES (
-      $1,
-      'address',
-      0,
-      $2,
-      false,
-      false,
-      false
-    )`,
-      [eventID, teamAID]
-    );
-    await client.query(
-      `INSERT INTO creatures (
-      event_id,
-      address,
-      points,
-      team_id,
-      is_picked,
-      is_dead,
-      joined
-    ) VALUES (
-      $1,
-      'address',
-      0,
-      $2,
-      false,
-      false,
-      false
-    )`,
-      [eventID, teamBID]
-    );
-    await client.query("COMMIT");
-    res.status(201).send({ message: "Event Created Successfully" });
-  } catch (err) {
-    await client.query("ROLLBACK");
-    console.log(err, "from error");
-    res.status(500).send({ message: "Couldn't Create the Event" });
-  } finally {
-    client.release();
-  }
-});
 module.exports = router;
