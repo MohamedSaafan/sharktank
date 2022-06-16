@@ -63,7 +63,6 @@ const getEvents = async () => {
     events.forEach(async (item) => {
       if (eventItem.id === item.eventId) {
         object.state = item.state;
-        console.log();
         if (object.team_a) {
           object.team_b = {
             id: item.teamId,
@@ -83,7 +82,6 @@ const getEvents = async () => {
         }
       }
     });
-    console.log(object.state, "from state");
 
     return object;
   });
@@ -110,7 +108,6 @@ router.get("/events/:id", async (req, res, next) => {
   const filteredEvents = events.filter((event) => {
     return event.id === +req.params.id;
   });
-  console.log(filteredEvents, "from events");
   res.send(filteredEvents[0]);
 });
 
@@ -156,7 +153,6 @@ router.post("/events/:id/pull/:creature_id", async (req, res, next) => {
   });
   sendMessageForClients(SSEMessage);
   console.log(SSEMessage, "from message ");
-  console.log(creatureDetails.points, "from points");
   // don't forget to return the points of the pulled fish
   res.status(201).send({
     message: "Fish Picked successfully",

@@ -28,7 +28,7 @@ let startGamesProcess;
 router.get("/startGames", (req, res, next) => {
   startGamesProcess = fork("./src/helpers/startGames.js");
   startGamesProcess.on("message", (msg) => {
-    console.log("from sending the message from the parent process");
+    console.log("message  sent to the parent process");
     if (msg.type === "sendSSEMessage") {
       console.log("message arrived to the root process");
       return sendMessageForClients(msg.message);
