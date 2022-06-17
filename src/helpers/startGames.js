@@ -24,11 +24,11 @@ const startGamge = async (eventID) => {
 const startGames = async () => {
   console.log("from start games");
   const minuteInMilliSeconds = 60000;
-
+  console.log("start games running successfully");
   setInterval(async () => {
     console.log("from checking games");
     const eventsQuery = await pool.query(
-      `SELECT id FROM events WHERE schedule_date  + duration > now() and started = false and finished = false`
+      `SELECT id FROM events WHERE schedule_date  + duration > now() and started = false and finished = false and is_scheduled = true;`
     );
 
     for (let i = 0; i < eventsQuery.rows.length; i++) {

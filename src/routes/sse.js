@@ -4,7 +4,6 @@ const uuid = require("uuid").v4;
 
 router.get("/monitor", (req, res, next) => {
   res.setHeader("Content-Type", "text/event-stream");
-  console.log(sseReqArray.length, "from sse Req Array length");
   const message = JSON.stringify({
     type: "connection",
     message: "Connection Accepted!",
@@ -12,10 +11,10 @@ router.get("/monitor", (req, res, next) => {
   const id = uuid();
   res.id = id;
   res.write(`data: ${message}\n\n`);
-  // res.socket.on("end", (e) => {
-  //   console.log("event Source Closed");
-  //   sseReqArray = sseReqArray.filter((x) => x.id != id);
-  // });
+  res.socket.on("end", (e) => {
+    console.log("event Source Closed");
+    sseReqArray = sseReqArray.filter((x) => x.id != id);
+  });
   sseReqArray.push(res);
 });
 
