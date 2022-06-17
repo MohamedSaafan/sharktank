@@ -9,7 +9,11 @@ const sendMessage = (res, message) => {
   }
 };
 const sendMessageForClients = (message) => {
-  console.log(sseReqArray.length, "from the length of the sse array");
+  console.log(
+    "about to send a message from setting message",
+    sseReqArray.length
+  );
+
   sseReqArray.forEach((res) => {
     sendMessage(res, message);
     console.log("\n\n message sent successfylly \n\n", message);

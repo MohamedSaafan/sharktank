@@ -27,11 +27,11 @@ const startGamge = async (eventID) => {
 
 const startGames = async () => {
   const minuteInMilliSeconds = 60000;
-
+  console.log("start games running successfully");
   setInterval(async () => {
     console.log("from checking the games");
     const eventsQuery = await pool.query(
-      `SELECT id FROM events WHERE schedule_date  + duration > now() and started = false and finished = false`
+      `SELECT id FROM events WHERE schedule_date  + duration > now() and started = false and finished = false and is_scheduled = true;`
     );
 
     console.log(eventsQuery.rowCount, "from length of the active games");
