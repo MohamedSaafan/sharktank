@@ -11,10 +11,10 @@ router.get("/monitor", (req, res, next) => {
   const id = uuid();
   res.id = id;
   res.write(`data: ${message}\n\n`);
-  res.socket.on("end", (e) => {
-    console.log("event Source Closed");
-    sseReqArray = sseReqArray.filter((x) => x.id != id);
-  });
+  // res.socket.on("end", (e) => {
+  //   console.log("event Source Closed");
+  //   sseReqArray = sseReqArray.filter((x) => x.id != id);
+  // });
   sseReqArray.push(res);
 });
 
